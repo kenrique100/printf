@@ -1,5 +1,5 @@
-#ifndef _MAIN_
-#define _MAIN_
+#ifndef MAIN_H
+#define MAIN_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -53,13 +53,15 @@ int has_precision(char *str);
 int print_string_width(char *format, char *str);
 int print_integer_width(char *format, int n);
 char *to_octal(unsigned int n);
-char *to_hex(long unsigned int n);
+char *to_hex(unsigned long int n);
 char *_tolower(char *str);
 char get_hex_code(int n);
 int _indexof(char *str, char c);
-int print_digit(int n, int is_int_min);
+int print_digit(int n, int is_int_min );
+int printf("\n");
 /**
  * struct hex_code - Struct hex_code
+ *
  * @c: The character associated to this code
  * @code: The digit for this char
  * operation.
@@ -70,4 +72,6 @@ typedef struct hex_code
 	int code;
 } hex_code_t;
 int _puts(char *str);
-#endif
+
+
+#endif/* MAIN_H */
