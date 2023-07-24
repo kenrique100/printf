@@ -1,67 +1,51 @@
-
 #include "main.h"
 
-void print_buffer(char buffer[], int *buff_ind);
-
 /**
-* _printf - Printf function
-* @format: format.
-* Return: Printed chars.
-*/
+ * _printf - a function that produces output according to
+ * a format.
+ *
+ * @format: The format to be used in printing
+ *
+ * Return: number of characters printed
+ */
 int _printf(const char *format, ...)
 {
-int i, printed = 0, printed_chars = 0;
-int flags, width, precision, size, buff_ind = 0;
-va_list list;
-char buffer[BUFF_SIZE];
+	va_list args, args_copy;
+	int i = 0, j, count, spec_count = 0;
+	char c, next_c, *spec = NULL;
+	int (*op)(int, char *, va_list) = NULL;
 
-if (format == NULL)
-return (-1);
-
-va_start(list, format);
-
-for (i = 0; format && format[i] != '\0'; i++)
-{
-if (format[i] != '%')
-{
-buffer[buff_ind++] = format[i];
-if (buff_ind == BUFF_SIZE)
-print_buffer(buffer, &buff_ind);
-/* write(1, &format[i], 1);*/
-printed_chars++;
-}
-else
-{
-print_buffer(buffer, &buff_ind);
-flags = get_flags(format, &i);
-width = get_width(format, &i, list);
-precision = get_precision(format, &i, list);
-size = get_size(format, &i);
-++i;
-printed = handle_print(format, &i, list, buffer,
-flags, width, precision, size);
-if (printed == -1)
-return (-1);
-printed_chars += printed;
-}
-}
-
-print_buffer(buffer, &buff_ind);
-
-va_end(list);
-
-return (printed_chars);
-}
-
-/**
-* print_buffer - Prints the contents of the buffer if it exist
-* @buffer: Array of chars
-* @buff_ind: Index at which to add next char, represents the length.
-*/
-void print_buffer(char buffer[], int *buff_ind)
-{
-if (*buff_ind > 0)
-write(1, &buffer[0], *buff_ind);
-
-*buff_ind = 0;
+	va_start(args, format);
+	count = (format != NULL) ? 0 : -1;
+	while (format != NULL && format[i] != '\0')
+	{
+		c = format[i];
+		next_c = format[i + 1];
+		if (c == '%' && _is_specifier(next_c) == 1)
+		{
+			spec = _realloc(NULL, 0, 2);
+			j = 0;
+			while (format[++i] != '\0' && op == NULL && spec != NULL)
+			{
+				spec[j++] = format[i];
+				spec[j] = '\0';
+				op = get_print_function(spec);
+				if (op != NULL)
+				{
+					va_copy(args_copy, args);
+					count += op(spec_count++, spec, args_copy);
+				}
+				spec = _realloc(spec, _strlen(spec), _strlen(spec) + 2);
+			}
+			op = NULL;
+			free(spec);
+			continue;
+		}
+		i = (c == '%' && next_c == '%') ? i + 1 : i;
+		c = (c == '%' && next_c == '%') ? next_c : c;
+		count += _putchar(c);
+		++i;
+	}
+	va_end(args);
+	return (count);
 }
