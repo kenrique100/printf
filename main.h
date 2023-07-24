@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef _MAIN_H
+#define _MAIN_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -58,7 +58,6 @@ char *_tolower(char *str);
 char get_hex_code(int n);
 int _indexof(char *str, char c);
 int print_digit(int n, int is_int_min );
-int printf("\n");
 /**
  * struct hex_code - Struct hex_code
  *
